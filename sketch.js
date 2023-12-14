@@ -3,6 +3,8 @@ let grid = [];
 let agent;
 let food;
 let path = [];
+let noiseOffsetX = 0;
+let noiseOffsetY = 0;
 
 function setup() {
   createCanvas(400, 400);
@@ -60,15 +62,36 @@ function drawGrid() {
   }
 }
 
-// Cria o grid com os terrenos escolhidos aleatoriamente
+// Cria o grid com os terrenos escolhidos com base em perlin noise
 function generateMap() {
+  let terrainScale = 0.1;
+  let obstacleThreshold = 0.3;
+  let mudThreshold = 0.4;
+  let grassThreshold = 0.6;
+
   for (let i = 0; i < cols; i++) {
     grid[i] = [];
     for (let j = 0; j < rows; j++) {
-      let terrainType = floor(random(4)); // 0: obstáculo, 1: grama, 2: lama, 3: água
+      let noiseValue = noise(noiseOffsetX + i * terrainScale, noiseOffsetY + j * terrainScale);
+
+      let terrainType;
+
+      if (noiseValue < obstacleThreshold) {
+        terrainType = 0; // Obstáculo
+      } else if (noiseValue < mudThreshold) {
+        terrainType = 1; // Areia
+      } else if (noiseValue < grassThreshold) {
+        terrainType = 2; // Atoleiro
+      } else {
+        terrainType = 3; // Água
+      }
+
       grid[i][j] = new Cell(i, j, terrainType);
     }
   }
+
+  noiseOffsetX += 0.01;
+  noiseOffsetY += 0.01;
 }
 
 function placeFood() {
