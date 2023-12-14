@@ -15,7 +15,8 @@ function setup() {
   generateMap();
 
   // Passo 2: O usuário escolhe qual tipo de busca será executada
-
+  selector = new Selector();
+  
   // Passo 3: Agente aparece em uma posição aleatória
   agent = placeAgente();
 
@@ -64,7 +65,7 @@ function drawGrid() {
 
 // Cria o grid com os terrenos escolhidos com base em perlin noise
 function generateMap() {
-  let terrainScale = 0.1;
+  let terrainScale = 0.2;
   let obstacleThreshold = 0.3;
   let mudThreshold = 0.4;
   let grassThreshold = 0.6;
