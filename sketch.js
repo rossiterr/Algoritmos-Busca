@@ -15,7 +15,7 @@ function setup() {
   // Passo 2: O usuário escolhe qual tipo de busca será executada
 
   // Passo 3: Agente aparece em uma posição aleatória
-  agent = new Agent(floor(random(cols)), floor(random(rows)));
+  agent = placeAgente();
 
   // Passo 4: Comida aparece em uma posição aleatória
   placeFood();
@@ -79,4 +79,14 @@ function placeFood() {
   } while (grid[foodPos.x][foodPos.y].terrainType === 0);
   
   food = new Food(foodPos);
+}
+
+function placeAgente() {
+  let agentPos;
+
+  do {
+    agentPos = createVector(floor(random(cols)), floor(random(rows)));
+  } while (grid[agentPos.x][agentPos.y].terrainType === 0);
+
+  return new Agent(agentPos.x, agentPos.y);
 }
