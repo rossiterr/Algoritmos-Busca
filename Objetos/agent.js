@@ -10,7 +10,27 @@ class Agent {
   }
 
   // Algoritmos de busca (BFS, DFS, Dijkstra, Gulosa e A*)
-  search() {}
+  search(type) {
+    if (type == 'BFS') {
+      print('Voce escolheu BFS');
+    }
+    
+    if (type == 'DFS') {
+      print('Voce escolheu DFS');
+    }
+    
+    if (type == 'Dijkstra') {
+      print('Voce escolheu Dijkstra');
+    }
+    
+    if (type == 'Gulosa') {
+      print('Voce escolheu Gulosa');
+    }
+    
+    if (type == 'A*') {
+      print('Voce escolheu A*');
+    }
+  }
 
   // Movimentação do agente
   move() {}

@@ -26,11 +26,9 @@ function setup() {
   // Passo 5: Agente percebe a comida
   agent.setGoal(food);
 
-  // Passo 6: Agente realiza a busca
-
-  // Passo 7: Resultado da busca (caminho)
-  path = agent.getPath();
-
+  // Passo 6.1: Gera o botão para o gente iniciar a busca
+  startButton = createButton('Iniciar Busca');
+  
   // Definição do frame rate
   frameRate(5);
 }
@@ -40,6 +38,13 @@ function draw() {
 
   // Desenha o ambiente
   drawGrid();
+  
+  // Passo 6.2: Agente inicia a busca
+  startButton.mousePressed(() => {
+    agent.search(selector.dropdown.value());
+  });
+  
+  // Passo 7: O agente recebe o caminho
 
   // Passo 8: Agente se desloca em direção à comida
   agent.move();
