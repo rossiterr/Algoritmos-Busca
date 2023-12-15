@@ -1,5 +1,6 @@
 let cols, rows;
 let grid = [];
+let grafo;
 let agent;
 let food;
 let path = [];
@@ -11,8 +12,9 @@ function setup() {
   cols = width / 20;
   rows = height / 20;
 
-  // Passo 1: Gera o mapa aleatório
+  // Passo 1: Gera o mapa aleatório e a matriz de adjacência
   generateMap();
+  grafo = createGraph();
 
   // Passo 2: O usuário escolhe qual tipo de busca será executada
   selector = new Selector();
@@ -100,6 +102,7 @@ function generateMap() {
   noiseOffsetY += 0.01;
 }
 
+// Cria uma comida em uma posição aleatória
 function placeFood() {
   let foodPos;
 
@@ -110,6 +113,7 @@ function placeFood() {
   food = new Food(foodPos);
 }
 
+// Cria o agente em uma posição aleatória
 function placeAgente() {
   let agentPos;
 
@@ -118,4 +122,34 @@ function placeAgente() {
   } while (grid[agentPos.x][agentPos.y].terrainType === 0);
 
   return new Agent(agentPos.x, agentPos.y);
+}
+
+// Cria a matriz de adjacência a partir do grid (desconsiderando os obstáculos)
+function createGraph() {
+  let graph = new Array(cols * rows);
+
+  for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < rows; j++) {
+      let index = i + j * cols;
+      if (grid[i][j].terrainType !== 0) {
+        graph[index] = [];
+        // Adicione vizinhos válidos e seus custos
+        addValidNeighbor(graph, index, i - 1, j, grid[i][j].cost);
+        addValidNeighbor(graph, index, i + 1, j, grid[i][j].cost);
+        addValidNeighbor(graph, index, i, j - 1, grid[i][j].cost);
+        addValidNeighbor(graph, index, i, j + 1, grid[i][j].cost);
+      }
+    }
+  }
+
+  return graph;
+}
+
+// Adiciona vizinho válido ao grafo com custo
+function addValidNeighbor(graph, currentIndex, i, j, cost) {
+  if (i >= 0 && i < cols && j >= 0 && j < rows && grid[i][j].terrainType !== 0) {
+    let neighborIndex = i + j * cols;
+    let border = [neighborIndex, cost];
+    graph[currentIndex].push(border);
+  }
 }
