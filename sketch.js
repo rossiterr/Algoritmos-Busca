@@ -70,6 +70,14 @@ function drawGrid() {
   }
 }
 
+/*
+
+
+A PARTIR DAQUI ESTÃO AS FUNÇÕES RELACIONADAS AO GRID
+
+
+*/
+
 // Cria o grid com os terrenos escolhidos com base em perlin noise
 function generateMap() {
   let terrainScale = 0.2;

@@ -1,6 +1,7 @@
 class Food {
   constructor(pos) {
     this.pos = pos;
+    this.cell = this.pos.x + this.pos.y * 20
   }
 
   // Imagem da comida

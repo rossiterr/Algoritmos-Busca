@@ -1,7 +1,7 @@
 class Agent {
   constructor(x, y) {
     this.pos = createVector(x, y);
-    this.speed = 1;
+    this.cell = this.pos.x + this.pos.y * 20
   }
 
   // Define o objetivo
