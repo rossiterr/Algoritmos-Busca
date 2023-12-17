@@ -91,7 +91,7 @@ A PARTIR DAQUI ESTÃO AS FUNÇÕES RELACIONADAS AO GRID
 
 // Cria o grid com os terrenos escolhidos com base em perlin noise
 function generateMap() {
-  let terrainScale = 2;
+  let terrainScale = 0.2;
   let obstacleThreshold = 0.3;
   let mudThreshold = 0.4;
   let grassThreshold = 0.6;
