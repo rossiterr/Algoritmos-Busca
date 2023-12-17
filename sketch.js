@@ -142,10 +142,10 @@ function createGraph() {
       if (grid[i][j].terrainType !== 0) {
         graph[index] = [];
         // Adicione vizinhos válidos e seus custos
-        addValidNeighbor(graph, index, i - 1, j, grid[i-1][j].cost);
-        addValidNeighbor(graph, index, i + 1, j, grid[i+1][j].cost);
-        addValidNeighbor(graph, index, i, j - 1, grid[i][j-1].cost);
-        addValidNeighbor(graph, index, i, j + 1, grid[i][j+1].cost);
+        addValidNeighbor(graph, index, i - 1, j, grid[i][j].cost);
+        addValidNeighbor(graph, index, i + 1, j, grid[i][j].cost);
+        addValidNeighbor(graph, index, i, j - 1, grid[i][j].cost);
+        addValidNeighbor(graph, index, i, j + 1, grid[i][j].cost);
       }
     }
   }
