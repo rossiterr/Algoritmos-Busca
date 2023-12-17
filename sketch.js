@@ -3,7 +3,8 @@ let grid = [];
 let grafo;
 let agent;
 let food;
-let path = [];
+let path;
+let pathIndex = 0;
 let noiseOffsetX = 0;
 let noiseOffsetY = 0;
 
@@ -43,13 +44,23 @@ function draw() {
   
   // Passo 6.2: Agente inicia a busca
   startButton.mousePressed(() => {
-    agent.search(selector.dropdown.value());
+    for (let i = 0; i < cols; i++) {
+      for (let j = 0; j < rows; j++) {
+        grid[i][j].reached = false;
+        grid[i][j].frontier = false;
+      }
+    }
+    
+    path = agent.search(selector.dropdown.value(), grafo, grid);
   });
   
-  // Passo 7: O agente recebe o caminho
-
+  // Passo 7: O agente recebe e desenha o caminho 
+  if (path !== undefined){
+    drawPath(path);
+  }
+  
   // Passo 8: Agente se desloca em direção à comida
-  agent.move();
+  agent.move(path);
 
   // Passo 9: Colisão entre agente e comida
   if (agent.eats(food)) {
@@ -80,7 +91,7 @@ A PARTIR DAQUI ESTÃO AS FUNÇÕES RELACIONADAS AO GRID
 
 // Cria o grid com os terrenos escolhidos com base em perlin noise
 function generateMap() {
-  let terrainScale = 0.2;
+  let terrainScale = 0.1;
   let obstacleThreshold = 0.3;
   let mudThreshold = 0.4;
   let grassThreshold = 0.6;
@@ -160,4 +171,24 @@ function addValidNeighbor(graph, currentIndex, i, j, cost) {
     let border = [neighborIndex, cost];
     graph[currentIndex].push(border);
   }
+}
+
+// desenha o caminho encontrado
+function drawPath(path) {
+
+  for (let i = 0; i < path.length - 1; i++) {
+    let currentVertex = cellPos(path[i]);
+    let nextVertex = cellPos(path[i + 1]);
+    // Desenha uma linha entre os vértices consecutivos no caminho
+    stroke(255, 0, 255);
+    strokeWeight(4);
+    line(currentVertex.x, currentVertex.y, nextVertex.x, nextVertex.y);
+  }
+}
+
+// retorna a posição dos pixels de uma determinada cell
+function cellPos(n) {
+  let j = floor(n/20);
+  let i = n - j * 20;
+  return createVector(i * 20 + 10, j * 20 + 10);
 }

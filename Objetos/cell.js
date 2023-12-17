@@ -3,7 +3,17 @@ class Cell {
     this.i = i;
     this.j = j;
     this.terrainType = terrainType;
-    this.opacidade = 100
+    this.opacidade = 120;
+    this.reached = false;
+    this.frontier = false;
+    
+    if (this.terrainType === 1) {
+      this.cost = 1; // Grama
+    } else if (this.terrainType === 2) {
+      this.cost = 5; // Lama
+    } else if (this.terrainType === 3) {
+      this.cost = 10; // Água
+    }
   }
 
   // Imagem do piso
@@ -13,7 +23,18 @@ class Cell {
     stroke(0);
     strokeWeight(1);
     noFill();
-
+    
+    if(this.reached === true) {
+      this.opacidade = 200;
+    } else {
+      this.opacidade = 120;
+    }
+    
+    if(this.frontier === true) {
+      stroke (0, 0, 200);
+      strokeWeight(3);
+    }
+    
     // Determina a cor do piso com base em sua característica
     if (this.terrainType === 0) {
       fill(102,102,102); // Obstáculo
