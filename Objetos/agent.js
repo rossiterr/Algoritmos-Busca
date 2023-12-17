@@ -56,14 +56,14 @@ class Agent {
           }
         }
         
-        if (current == this.goal) {
+        if (current === this.goal) {
           founded = true;
           break;
         }
       }
       
       if (founded) {
-        print('caminho encontrado');
+        print('caminho encontrado!');
         return this.path(start, this.goal, cameFrom);
       } else {
         print('caminho não encontrado');
@@ -72,7 +72,39 @@ class Agent {
     
     //DFS
     if (type == 'DFS') {
-      print('Voce escolheu DFS');
+      let founded = false;
+      let start = this.cell;
+      let frontier = [];
+      frontier.push(start);
+      
+      let cameFrom = {};
+      cameFrom[start] = null;
+      
+      while (frontier.length > 0) {
+        let current = frontier.pop();
+        this.cellPosition(current, grid).frontier = false;
+        this.cellPosition(current, grid).reached = true;
+        
+        for (let neighbor of graph[current]){
+          if (!(neighbor[0] in cameFrom)) {
+            frontier.push(neighbor[0]);
+            this.cellPosition(neighbor[0], grid).frontier = true;
+            cameFrom[neighbor[0]] = current;
+          }
+        }
+        
+        if (current === this.goal) {
+          founded = true;
+          break;
+        }
+      }
+      
+      if (founded) {
+        print('caminho encontrado!');
+        return this.path(start, this.goal, cameFrom);
+      } else {
+        print('caminho não encontrado');
+      }
     }
     
     if (type == 'Dijkstra') {
