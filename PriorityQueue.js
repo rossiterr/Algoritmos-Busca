@@ -3,13 +3,13 @@ class PriorityQueue {
     this.elements = [];
   }
 
-  // Adiciona um elemento à fila com uma determinada prioridade
+  // Adiciona elemento 
   put(element, priority) {
     this.elements.push({ element, priority });
     this.elements.sort((a, b) => a.priority - b.priority);
   }
 
-  // Remove e retorna o elemento com a maior prioridade
+  // Remove e retorna o elemento 
   get() {
     if (this.empty()) {
       return null;
@@ -17,7 +17,7 @@ class PriorityQueue {
     return this.elements.shift().element;
   }
 
-  // Verifica se a fila está vazia
+  // fila está vazia?
   empty() {
     return this.elements.length === 0;
   }
