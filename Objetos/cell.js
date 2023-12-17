@@ -25,13 +25,13 @@ class Cell {
     noFill();
     
     if(this.reached === true) {
-      this.opacidade = 200;
+      this.opacidade = 255;
     } else {
       this.opacidade = 120;
     }
     
     if(this.frontier === true) {
-      stroke (0, 0, 200);
+      stroke (0, 0, 255);
       strokeWeight(3);
     }
     
