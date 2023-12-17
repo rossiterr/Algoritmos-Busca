@@ -29,6 +29,13 @@ class Agent {
 
   return path;
 }
+  heuristic(goal, next) {
+    // Supondo que goal e next são objetos com propriedades x e y
+    const dx = Math.abs(goal.x - next.x);
+    const dy = Math.abs(goal.y - next.y);
+    return dx + dy;
+  }
+
 
   // Algoritmos de busca (BFS, DFS, Dijkstra, Gulosa e A*)
   search(type, graph, grid) {
@@ -72,15 +79,69 @@ class Agent {
     
     //DFS
     if (type == 'DFS') {
-      print('Voce escolheu DFS');
+      
     }
     
-    if (type == 'Dijkstra') {
-      print('Voce escolheu Dijkstra');
+    if (type == 'Custo Uniforme') {
+      let frontier = new PriorityQueue();
+      frontier.put(this.cell, 0);
+    
+      let noOrigem = {};
+      let custoAteAgora = {};
+      noOrigem[this.cell] = null;
+      custoAteAgora[this.cell] = 0;
+    
+      while (!frontier.empty()) {
+        let current = frontier.get();
+        this.cellPosition(current, grid).frontier = false;
+        this.cellPosition(current, grid).reached = true;
+    
+        for (let neighbor of graph[current]) {
+          let newCost = custoAteAgora[current] + neighbor[1];
+          if (!(neighbor[0] in custoAteAgora) || newCost < custoAteAgora[neighbor[0]]) {
+            custoAteAgora[neighbor[0]] = newCost;
+            let priority = newCost;
+            frontier.put(neighbor[0], priority);
+            this.cellPosition(neighbor[0], grid).frontier = true;
+            noOrigem[neighbor[0]] = current;
+          }
+        }
+    
+        if (current == this.goal) {
+          print('Caminho encontrado');
+          return this.path(this.cell, this.goal, noOrigem);
+        }
+    }
+    print('Caminho não encontrado');
     }
     
     if (type == 'Gulosa') {
-      print('Voce escolheu Gulosa');
+      let frontier = new PriorityQueue();
+      frontier.put(this.cell, 0);
+
+      let noOrigem = {};
+      noOrigem[this.cell] = null;
+
+      while (!frontier.empty()) {
+        let current = frontier.get();
+        this.cellPosition(current, grid).frontier = false;
+        this.cellPosition(current, grid).reached = true;
+
+        if (current == this.goal) {
+          print('Caminho encontrado');
+          return this.path(this.cell, this.goal, noOrigem);
+        }
+
+        for (let neighbor of graph[current]) {
+          if (!(neighbor[0] in noOrigem)) {
+            let priority = this.heuristic(this.goal, neighbor[0]);
+            frontier.put(neighbor[0], priority);
+            this.cellPosition(neighbor[0], grid).frontier = true;
+            noOrigem[neighbor[0]] = current;
+          }
+        }
+      }
+      print('Caminho não encontrado');   
     }
     
     if (type == 'A*') {
