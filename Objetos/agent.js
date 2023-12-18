@@ -2,6 +2,8 @@ class Agent {
   constructor(x, y) {
     this.pos = createVector(x, y);
     this.cell = this.pos.x + this.pos.y * 20
+    this.pathIndex = 0;
+    this.speed = 0.1;
   }
 
   // Define o objetivo
@@ -18,8 +20,8 @@ class Agent {
   }
   
   coordenadasDoGrid(n){
-    let i = n % 20; // Linha
-    let j = Math.floor(n / 20); // Coluna
+    let i = n % 20; // Coluna
+    let j = Math.floor(n / 20); // Linha
     return createVector(i,j);
   }
 
@@ -81,7 +83,7 @@ class Agent {
       }
       
       if (founded) {
-        //print('caminho encontrado!');
+        print('caminho encontrado!');
         return this.path(start, this.goal, cameFrom);
       } else {
         print('caminho não encontrado');
@@ -118,7 +120,7 @@ class Agent {
       }
       
       if (founded) {
-        //print('caminho encontrado!');
+        print('caminho encontrado!');
         return this.path(start, this.goal, cameFrom);
       } else {
         print('caminho não encontrado');
@@ -151,7 +153,7 @@ class Agent {
         }
     
         if (current == this.goal) {
-          //print('Caminho encontrado');
+          print('Caminho encontrado!');
           return this.path(this.cell, this.goal, noOrigem);
         }
     }
@@ -171,7 +173,7 @@ class Agent {
         this.cellPosition(current, grid).reached = true;
 
         if (current == this.goal) {
-          //print('Caminho encontrado');
+          print('Caminho encontrado!');
           return this.path(this.cell, this.goal, noOrigem);
         }
 
@@ -202,7 +204,8 @@ class Agent {
         this.cellPosition(current, grid).reached = true;
 
         if (current == this.goal) {
-          //print('Caminho encontrado');
+          print('Caminho encontrado!');
+          print(noOrigem)
           return this.path(this.cell, this.goal, noOrigem);
         }
 
@@ -234,6 +237,7 @@ class Agent {
       // Move o agente para a próxima posição
       this.pos.x = nextPosition.x;
       this.pos.y = nextPosition.y;
+      this.cell = this.pos.x + this.pos.y * 20;
 
       // Remove a posição atual do caminho
       path.shift();

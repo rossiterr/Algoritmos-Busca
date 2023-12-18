@@ -224,21 +224,7 @@ function cellPos(n) {
 
 
 function reloadSketch(){
-  grid = [];
   pathIndex = 0;
-  noiseOffsetX = 0;
-  noiseOffsetY = 0;
-  
-  createCanvas(400, 400);
-  cols = width / 20;
-  rows = height / 20;
-
-  // Passo 1: Gera o mapa aleatório e a matriz de adjacência
-  generateMap();
-  grafo = createGraph();
-  
-  // Passo 3: Agente aparece em uma posição aleatória
-  agent = placeAgente();
 
   // Passo 4: Comida aparece em uma posição aleatória
   placeFood();
