@@ -233,8 +233,7 @@ class Agent {
     if (path.length > 0) {
       // Obtém a próxima posição no caminho
       let nextPosition = this.coordenadasDoGrid(path[0]);
-      print(path[0]);
-      print(nextPosition);
+      
       // Move o agente para a próxima posição
       this.pos.x = nextPosition.x;
       this.pos.y = nextPosition.y;
