@@ -225,6 +225,14 @@ function cellPos(n) {
 
 
 function reloadSketch(){
+  // Coloca as cells para o estado padrão
+  for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < rows; j++) { 
+      grid[i][j].reached = false;
+      grid[i][j].frontier = false;
+    }
+  }
+  
   pathIndex = 0;
   moveOn = false;
 

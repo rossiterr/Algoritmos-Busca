@@ -68,6 +68,11 @@ class Agent {
         this.cellPosition(current, grid).frontier = false;
         this.cellPosition(current, grid).reached = true;
         
+        if (current === this.goal) {
+          founded = true;
+          break;
+        }
+        
         for (let neighbor of graph[current]){
           if (!(neighbor[0] in cameFrom)) {
             frontier.push(neighbor[0]);
@@ -75,18 +80,13 @@ class Agent {
             cameFrom[neighbor[0]] = current;
           }
         }
-        
-        if (current === this.goal) {
-          founded = true;
-          break;
-        }
       }
       
       if (founded) {
-        print('caminho encontrado!');
+        print('Caminho encontrado!');
         return this.path(start, this.goal, cameFrom);
       } else {
-        print('caminho não encontrado');
+        print('Caminho não encontrado');
       }
     }
     
@@ -105,6 +105,11 @@ class Agent {
         this.cellPosition(current, grid).frontier = false;
         this.cellPosition(current, grid).reached = true;
         
+        if (current === this.goal) {
+          founded = true;
+          break;
+        }
+        
         for (let neighbor of graph[current]){
           if (!(neighbor[0] in cameFrom)) {
             frontier.push(neighbor[0]);
@@ -112,18 +117,13 @@ class Agent {
             cameFrom[neighbor[0]] = current;
           }
         }
-        
-        if (current === this.goal) {
-          founded = true;
-          break;
-        }
       }
       
       if (founded) {
-        print('caminho encontrado!');
+        print('Caminho encontrado!');
         return this.path(start, this.goal, cameFrom);
       } else {
-        print('caminho não encontrado');
+        print('Caminho não encontrado');
       }
     }
     
