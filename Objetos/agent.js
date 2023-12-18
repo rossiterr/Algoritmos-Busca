@@ -2,8 +2,6 @@ class Agent {
   constructor(x, y) {
     this.pos = createVector(x, y);
     this.cell = this.pos.x + this.pos.y * 20
-    this.pathIndex = 0;
-    this.speed = 0.1;
   }
 
   // Define o objetivo
@@ -20,8 +18,8 @@ class Agent {
   }
   
   coordenadasDoGrid(n){
-    let i = n % 20; // Coluna
-    let j = Math.floor(n / 20); // Linha
+    let i = n % 20; // Linha
+    let j = Math.floor(n / 20); // Coluna
     return createVector(i,j);
   }
 
@@ -83,7 +81,7 @@ class Agent {
       }
       
       if (founded) {
-        print('caminho encontrado!');
+        //print('caminho encontrado!');
         return this.path(start, this.goal, cameFrom);
       } else {
         print('caminho não encontrado');
@@ -120,7 +118,7 @@ class Agent {
       }
       
       if (founded) {
-        print('caminho encontrado!');
+        //print('caminho encontrado!');
         return this.path(start, this.goal, cameFrom);
       } else {
         print('caminho não encontrado');
@@ -153,7 +151,7 @@ class Agent {
         }
     
         if (current == this.goal) {
-          print('Caminho encontrado');
+          //print('Caminho encontrado');
           return this.path(this.cell, this.goal, noOrigem);
         }
     }
@@ -173,7 +171,7 @@ class Agent {
         this.cellPosition(current, grid).reached = true;
 
         if (current == this.goal) {
-          print('Caminho encontrado');
+          //print('Caminho encontrado');
           return this.path(this.cell, this.goal, noOrigem);
         }
 
@@ -204,8 +202,7 @@ class Agent {
         this.cellPosition(current, grid).reached = true;
 
         if (current == this.goal) {
-          print('Caminho encontrado');
-          print(noOrigem)
+          //print('Caminho encontrado');
           return this.path(this.cell, this.goal, noOrigem);
         }
 
