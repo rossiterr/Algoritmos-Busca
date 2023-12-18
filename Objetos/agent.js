@@ -37,7 +37,7 @@ class Agent {
 }
   heuristic(goal, next) {
     // Supondo que goal e next são objetos com propriedades x e y
-    return Math.abs(goal.x - next.x) + Math.abs(goal.y - next.y);
+    return (Math.abs(goal.x - next.x) + Math.abs(goal.y - next.y))/20;
   }
 
 
@@ -203,7 +203,7 @@ class Agent {
           let newCost = custoAteAgora[current] + neighbor[1];
           if (!(neighbor[0] in custoAteAgora) || newCost < custoAteAgora[neighbor[0]]) {
             custoAteAgora[neighbor[0]] = newCost;
-            let priority = newCost + this.heuristic(this.goal, neighbor[0]);
+            let priority = newCost + this.heuristic(this.cellCords(this.goal), this.cellCords(neighbor[0]));
             frontier.put(neighbor[0], priority);
             this.cellPosition(neighbor[0], grid).frontier = true;
             noOrigem[neighbor[0]] = current;
