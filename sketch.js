@@ -1,4 +1,5 @@
 let cols, rows;
+let moveButton;
 let grid = [];
 let grafo;
 let agent;
@@ -8,7 +9,8 @@ let pathIndex = 0;
 let noiseOffsetX = 0;
 let noiseOffsetY = 0;
 let countFood = 0;
-let velFactor = 1
+let velFactor = 1;
+let moveOn = false;
 
 function setup() {
   createCanvas(400, 400);
@@ -21,6 +23,8 @@ function setup() {
 
   // Passo 2: O usuário escolhe qual tipo de busca será executada
   selector = new Selector();
+  startButton = createButton('Iniciar Busca');
+  moveButton = createButton('Iniciar Movimento');
   
   // Passo 3: Agente aparece em uma posição aleatória
   agent = placeAgente();
@@ -30,9 +34,6 @@ function setup() {
 
   // Passo 5: Agente percebe a comida
   agent.setGoal(food);
-
-  // Passo 6.1: Gera o botão para o gente iniciar a busca
-  startButton = createButton('Iniciar Busca');
   
   // Definição do frame rate
   frameRate(5);
@@ -45,7 +46,7 @@ function draw() {
   // Desenha o ambiente
   drawGrid();
   
-  // Passo 6.2: Agente inicia a busca
+  // Passo 6: Agente inicia a busca
   startButton.mousePressed(() => {
     for (let i = 0; i < cols; i++) {
       for (let j = 0; j < rows; j++) {
@@ -63,7 +64,13 @@ function draw() {
   }
   
   // Passo 8: Agente se desloca em direção à comida
-  if (path !== undefined){
+  if (moveButton !== undefined) { 
+    moveButton.mousePressed(() => {
+    moveOn = true;
+    });
+  }
+  
+  if (path !== undefined && moveOn){
     agent.move(path,grafo);
     agent.display();
     if(path.length>1){
@@ -219,6 +226,7 @@ function cellPos(n) {
 
 function reloadSketch(){
   pathIndex = 0;
+  moveOn = false;
 
   // Passo 4: Comida aparece em uma posição aleatória
   placeFood();
