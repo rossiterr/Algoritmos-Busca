@@ -229,10 +229,6 @@ class Agent {
 
   // Movimentação do agente
   move(path) {
-    //print(this.pos);
-    //print(path[0]);
-    //print(this.coordenadasDoGrid(path[0]));
-    //print(grafo);
     // Verifica se ainda há elementos no array 'path'
     if (path.length > 0) {
       // Obtém a próxima posição no caminho
