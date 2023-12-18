@@ -205,7 +205,6 @@ class Agent {
 
         if (current == this.goal) {
           print('Caminho encontrado!');
-          print(noOrigem)
           return this.path(this.cell, this.goal, noOrigem);
         }
 

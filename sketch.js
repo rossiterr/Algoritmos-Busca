@@ -8,6 +8,7 @@ let pathIndex = 0;
 let noiseOffsetX = 0;
 let noiseOffsetY = 0;
 let countFood = 0;
+let velFactor = 1
 
 function setup() {
   createCanvas(400, 400);
@@ -68,11 +69,11 @@ function draw() {
     if(path.length>1){
       let terreno = agent.cellPosition(agent.cell, grid).terrainType
       if (terreno == 1) {
-        frameRate(5);
+        frameRate(velFactor * 10);
       } else if (terreno == 2) {
-        frameRate(2);
+        frameRate(velFactor * 2);
       } else {
-        frameRate(1);
+        frameRate(velFactor);
       }
     }
   }
