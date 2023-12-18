@@ -31,9 +31,7 @@ class Agent {
 }
   heuristic(goal, next) {
     // Supondo que goal e next são objetos com propriedades x e y
-    const dx = Math.abs(goal.x - next.x);
-    const dy = Math.abs(goal.y - next.y);
-    return dx + dy;
+    return Math.abs(goal.x - next.x) + Math.abs(goal.y - next.y);
   }
 
 
@@ -177,7 +175,36 @@ class Agent {
     }
     
     if (type == 'A*') {
-      print('Voce escolheu A*');
+      let frontier = new PriorityQueue();
+      frontier.put(this.cell, 0);
+
+      let noOrigem = {};
+      let custoAteAgora = {};
+      noOrigem[this.cell] = null;
+      custoAteAgora[this.cell] = 0;
+
+      while (!frontier.empty()) {
+        let current = frontier.get();
+        this.cellPosition(current, grid).frontier = false;
+        this.cellPosition(current, grid).reached = true;
+
+        if (current == this.goal) {
+          print('Caminho encontrado');
+          return this.path(this.cell, this.goal, noOrigem);
+        }
+
+        for (let neighbor of graph[current]) {
+          let newCost = custoAteAgora[current] + neighbor[1];
+          if (!(neighbor[0] in custoAteAgora) || newCost < custoAteAgora[neighbor[0]]) {
+            custoAteAgora[neighbor[0]] = newCost;
+            let priority = newCost + this.heuristic(this.goal, neighbor[0]);
+            frontier.put(neighbor[0], priority);
+            this.cellPosition(neighbor[0], grid).frontier = true;
+            noOrigem[neighbor[0]] = current;
+          }
+        }
+      }
+      print('Caminho não encontrado');
     }
   }
 
