@@ -38,7 +38,6 @@ function setup() {
 
 function draw() {
   background(255);
-
   // Desenha o ambiente
   drawGrid();
   
@@ -61,8 +60,25 @@ function draw() {
   
   // Passo 8: Agente se desloca em direção à comida
   if (path !== undefined){
-    agent.move(path);
+    agent.move(path,grafo);
     agent.display();
+    if(path.length>1){
+      for(let vet of grafo[path[1]]){// grafo[path[n]] tem 4 posicoes de 0 a 3. 0->esquerda;1->direita;2->cima;3->baixo e vet[2] de 0 a 1. 0->posicao no grid;1->peso do grid
+        if (vet[0]===path[0]){//path[0] é o grid atual e inicialmente é a msm posicao do agente 
+          switch(vet[1]){
+            case 1:
+              frameRate(5);
+              break;
+            case 5:
+              frameRate(2);
+              break;
+            case 10:
+              frameRate(1);
+              break;
+          }
+        }
+      }
+    }
   }
 
   // Passo 9: Colisão entre agente e comida
