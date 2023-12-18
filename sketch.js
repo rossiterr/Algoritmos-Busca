@@ -84,6 +84,7 @@ function draw() {
   // Passo 9: Colisão entre agente e comida
   if (agent.eats(food)) {
     food = null;
+    window.location.reload();
   }
 
   // Desenha agente e comida
