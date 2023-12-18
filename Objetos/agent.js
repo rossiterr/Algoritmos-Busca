@@ -17,6 +17,12 @@ class Agent {
     return grid[i][j];
   }
   
+  cellCords(n) {
+    let j = floor(n/20);
+    let i = n - j * 20;
+    return createVector(i * 20 + 10, j * 20 + 10);
+  }
+  
   // retorna o caminho em uma lista
   path(start, goal, cameFrom) {
   let current = goal;
@@ -164,7 +170,7 @@ class Agent {
 
         for (let neighbor of graph[current]) {
           if (!(neighbor[0] in noOrigem)) {
-            let priority = this.heuristic(this.goal, neighbor[0]);
+            let priority = this.heuristic(this.cellCords(this.goal), this.cellCords(neighbor[0]));
             frontier.put(neighbor[0], priority);
             this.cellPosition(neighbor[0], grid).frontier = true;
             noOrigem[neighbor[0]] = current;
