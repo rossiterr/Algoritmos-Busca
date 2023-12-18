@@ -2,6 +2,8 @@ class Agent {
   constructor(x, y) {
     this.pos = createVector(x, y);
     this.cell = this.pos.x + this.pos.y * 20
+    this.pathIndex = 0;
+    this.speed = 0.1;
   }
 
   // Define o objetivo
@@ -17,6 +19,13 @@ class Agent {
     return grid[i][j];
   }
   
+  coordenadasDoGrid(n){
+    let i = n % 20; // Coluna
+    let j = Math.floor(n / 20); // Linha
+    return createVector(i,j);
+  }
+
+
   cellCords(n) {
     let j = floor(n/20);
     let i = n - j * 20;
@@ -196,6 +205,7 @@ class Agent {
 
         if (current == this.goal) {
           print('Caminho encontrado');
+          print(noOrigem)
           return this.path(this.cell, this.goal, noOrigem);
         }
 
@@ -214,18 +224,35 @@ class Agent {
     }
   }
 
+
+
+
   // Movimentação do agente
-  move(path) {}
+  move(path) {
+    // Verifica se ainda há elementos no array 'path'
+    if (path.length > 0) {
+      // Obtém a próxima posição no caminho
+      let nextPosition = this.coordenadasDoGrid(path[0]);
+      print(path[0]);
+      print(nextPosition);
+      // Move o agente para a próxima posição
+      this.pos.x = nextPosition.x;
+      this.pos.y = nextPosition.y;
+
+      // Remove a posição atual do caminho
+      path.shift();
+    }
+  }
 
   // Checa se o agente chegou até a comida
   eats(food) {
-    let d = dist(this.pos.x, this.pos.y, food.pos.x, food.pos.y);
+    let d = dist(this.pos.x, this.pos.y, (food!==null)?food.pos.x:this.pos.x, (food!==null)?food.pos.y:this.pos.y);
     return d == 0;
   }
 
   // Imagem do agente
   display() {
-    fill(255, 0, 0);
+    fill(255, 0, 0); //vermelho
     noStroke();
     ellipse(this.pos.x * 20 + 10, this.pos.y * 20 + 10, 15, 15);
   }

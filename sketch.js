@@ -60,7 +60,10 @@ function draw() {
   }
   
   // Passo 8: Agente se desloca em direção à comida
-  agent.move(path);
+  if (path !== undefined){
+    agent.move(path);
+    agent.display();
+  }
 
   // Passo 9: Colisão entre agente e comida
   if (agent.eats(food)) {
@@ -69,7 +72,10 @@ function draw() {
 
   // Desenha agente e comida
   agent.display();
-  food.display();
+  if(food!==null){
+    food.display();
+  }
+  
 }
 
 // Desenha o grid
