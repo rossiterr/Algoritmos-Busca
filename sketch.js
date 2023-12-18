@@ -7,6 +7,7 @@ let path;
 let pathIndex = 0;
 let noiseOffsetX = 0;
 let noiseOffsetY = 0;
+let countFood = 0;
 
 function setup() {
   createCanvas(400, 400);
@@ -34,6 +35,8 @@ function setup() {
   
   // Definição do frame rate
   frameRate(5);
+
+  print("Comida: "+String(countFood));
 }
 
 function draw() {
@@ -84,7 +87,10 @@ function draw() {
   // Passo 9: Colisão entre agente e comida
   if (agent.eats(food)) {
     food = null;
-    window.location.reload();
+    countFood++;
+    print("Comida: "+String(countFood));
+    reloadSketch();
+    
   }
 
   // Desenha agente e comida
@@ -214,4 +220,33 @@ function cellPos(n) {
   let j = floor(n/20);
   let i = n - j * 20;
   return createVector(i * 20 + 10, j * 20 + 10);
+}
+
+
+function reloadSketch(){
+  grid = [];
+  pathIndex = 0;
+  noiseOffsetX = 0;
+  noiseOffsetY = 0;
+  
+  createCanvas(400, 400);
+  cols = width / 20;
+  rows = height / 20;
+
+  // Passo 1: Gera o mapa aleatório e a matriz de adjacência
+  generateMap();
+  grafo = createGraph();
+  
+  // Passo 3: Agente aparece em uma posição aleatória
+  agent = placeAgente();
+
+  // Passo 4: Comida aparece em uma posição aleatória
+  placeFood();
+
+  // Passo 5: Agente percebe a comida
+  agent.setGoal(food);
+  
+  // Definição do frame rate
+  frameRate(5);
+
 }
