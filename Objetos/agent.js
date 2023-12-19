@@ -4,6 +4,10 @@ class Agent {
     this.cell = this.pos.x + this.pos.y * 20
     this.pathIndex = 0;
     this.speed = 0.1;
+    this.frontier = [];
+    this.priority = new PriorityQueue();
+    this.costNow = {};
+    this.cameFrom = {};
   }
 
   // Define o objetivo
@@ -46,7 +50,7 @@ class Agent {
 }
   heuristic(goal, next) {
     // Supondo que goal e next são objetos com propriedades x e y
-    return (Math.abs(goal.x - next.x) + Math.abs(goal.y - next.y))/20;
+    return (Math.abs(goal.x - next.x) + Math.abs(goal.y - next.y))/15;
   }
 
 
@@ -55,176 +59,121 @@ class Agent {
     
     // BFS
     if (type == 'BFS') {      
-      let founded = false;
-      let start = this.cell;
-      let frontier = [];
-      frontier.push(start);
-      
-      let cameFrom = {};
-      cameFrom[start] = null;
-      
-      while (frontier.length > 0) {
-        let current = frontier.shift();
+      if (this.frontier.length > 0) {
+        let current = this.frontier.shift();
         this.cellPosition(current, grid).frontier = false;
         this.cellPosition(current, grid).reached = true;
         
         if (current === this.goal) {
-          founded = true;
-          break;
+          print('Caminho encontrado!');
+          return this.path(this.cell, this.goal, this.cameFrom);
         }
         
         for (let neighbor of graph[current]){
-          if (!(neighbor[0] in cameFrom)) {
-            frontier.push(neighbor[0]);
+          if (!(neighbor[0] in this.cameFrom)) {
+            this.frontier.push(neighbor[0]);
             this.cellPosition(neighbor[0], grid).frontier = true;
-            cameFrom[neighbor[0]] = current;
+            this.cameFrom[neighbor[0]] = current;
           }
         }
-      }
-      
-      if (founded) {
-        print('Caminho encontrado!');
-        return this.path(start, this.goal, cameFrom);
-      } else {
-        print('Caminho não encontrado');
       }
     }
     
     //DFS
     if (type == 'DFS') {
-      let founded = false;
-      let start = this.cell;
-      let frontier = [];
-      frontier.push(start);
-      
-      let cameFrom = {};
-      cameFrom[start] = null;
-      
-      while (frontier.length > 0) {
-        let current = frontier.pop();
+      if (this.frontier.length > 0) {
+        let current = this.frontier.pop();
         this.cellPosition(current, grid).frontier = false;
         this.cellPosition(current, grid).reached = true;
         
         if (current === this.goal) {
-          founded = true;
-          break;
+          print('Caminho encontrado!');
+          return this.path(this.cell, this.goal, this.cameFrom);
         }
         
         for (let neighbor of graph[current]){
-          if (!(neighbor[0] in cameFrom)) {
-            frontier.push(neighbor[0]);
+          if (!(neighbor[0] in this.cameFrom)) {
+            this.frontier.push(neighbor[0]);
             this.cellPosition(neighbor[0], grid).frontier = true;
-            cameFrom[neighbor[0]] = current;
+            this.cameFrom[neighbor[0]] = current;
           }
         }
       }
-      
-      if (founded) {
-        print('Caminho encontrado!');
-        return this.path(start, this.goal, cameFrom);
-      } else {
-        print('Caminho não encontrado');
-      }
     }
     
+    // Custo Uniforme
     if (type == 'Custo Uniforme') {
-      let frontier = new PriorityQueue();
-      frontier.put(this.cell, 0);
-    
-      let noOrigem = {};
-      let custoAteAgora = {};
-      noOrigem[this.cell] = null;
-      custoAteAgora[this.cell] = 0;
-    
-      while (!frontier.empty()) {
-        let current = frontier.get();
+      if (!this.priority.empty()) {
+        let current = this.priority.get();
         this.cellPosition(current, grid).frontier = false;
         this.cellPosition(current, grid).reached = true;
     
         for (let neighbor of graph[current]) {
-          let newCost = custoAteAgora[current] + neighbor[1];
-          if (!(neighbor[0] in custoAteAgora) || newCost < custoAteAgora[neighbor[0]]) {
-            custoAteAgora[neighbor[0]] = newCost;
+          let newCost = this.costNow[current] + neighbor[1];
+          if (!(neighbor[0] in this.costNow) || newCost < this.costNow[neighbor[0]]) {
+            this.costNow[neighbor[0]] = newCost;
             let priority = newCost;
-            frontier.put(neighbor[0], priority);
+            this.priority.put(neighbor[0], priority);
             this.cellPosition(neighbor[0], grid).frontier = true;
-            noOrigem[neighbor[0]] = current;
+            this.cameFrom[neighbor[0]] = current;
           }
         }
     
         if (current == this.goal) {
           print('Caminho encontrado!');
-          return this.path(this.cell, this.goal, noOrigem);
+          return this.path(this.cell, this.goal, this.cameFrom);
         }
-    }
-    print('Caminho não encontrado');
+      }
     }
     
+    // Gulosa
     if (type == 'Gulosa') {
-      let frontier = new PriorityQueue();
-      frontier.put(this.cell, 0);
-
-      let noOrigem = {};
-      noOrigem[this.cell] = null;
-
-      while (!frontier.empty()) {
-        let current = frontier.get();
+      if (!this.priority.empty()) {
+        let current = this.priority.get();
         this.cellPosition(current, grid).frontier = false;
         this.cellPosition(current, grid).reached = true;
 
         if (current == this.goal) {
           print('Caminho encontrado!');
-          return this.path(this.cell, this.goal, noOrigem);
+          return this.path(this.cell, this.goal, this.cameFrom);
         }
 
         for (let neighbor of graph[current]) {
-          if (!(neighbor[0] in noOrigem)) {
+          if (!(neighbor[0] in this.cameFrom)) {
             let priority = this.heuristic(this.cellCords(this.goal), this.cellCords(neighbor[0]));
-            frontier.put(neighbor[0], priority);
+            this.priority.put(neighbor[0], priority);
             this.cellPosition(neighbor[0], grid).frontier = true;
-            noOrigem[neighbor[0]] = current;
+            this.cameFrom[neighbor[0]] = current;
           }
         }
-      }
-      print('Caminho não encontrado');   
+      }  
     }
-    
+
+    // A*
     if (type == 'A*') {
-      let frontier = new PriorityQueue();
-      frontier.put(this.cell, 0);
-
-      let noOrigem = {};
-      let custoAteAgora = {};
-      noOrigem[this.cell] = null;
-      custoAteAgora[this.cell] = 0;
-
-      while (!frontier.empty()) {
-        let current = frontier.get();
+      if (!this.priority.empty()) {
+        let current = this.priority.get();
         this.cellPosition(current, grid).frontier = false;
         this.cellPosition(current, grid).reached = true;
 
         if (current == this.goal) {
           print('Caminho encontrado!');
-          return this.path(this.cell, this.goal, noOrigem);
+          return this.path(this.cell, this.goal, this.cameFrom);
         }
 
         for (let neighbor of graph[current]) {
-          let newCost = custoAteAgora[current] + neighbor[1];
-          if (!(neighbor[0] in custoAteAgora) || newCost < custoAteAgora[neighbor[0]]) {
-            custoAteAgora[neighbor[0]] = newCost;
+          let newCost = this.costNow[current] + neighbor[1];
+          if (!(neighbor[0] in this.costNow) || newCost < this.costNow[neighbor[0]]) {
+            this.costNow[neighbor[0]] = newCost;
             let priority = newCost + this.heuristic(this.cellCords(this.goal), this.cellCords(neighbor[0]));
-            frontier.put(neighbor[0], priority);
+            this.priority.put(neighbor[0], priority);
             this.cellPosition(neighbor[0], grid).frontier = true;
-            noOrigem[neighbor[0]] = current;
+            this.cameFrom[neighbor[0]] = current;
           }
         }
       }
-      print('Caminho não encontrado');
     }
   }
-
-
-
 
   // Movimentação do agente
   move(path) {

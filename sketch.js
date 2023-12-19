@@ -11,6 +11,7 @@ let noiseOffsetY = 0;
 let countFood = 0;
 let velFactor = 1;
 let moveOn = false;
+let searchOn = false;
 
 function setup() {
   createCanvas(400, 400);
@@ -36,7 +37,7 @@ function setup() {
   agent.setGoal(food);
   
   // Definição do frame rate
-  frameRate(5);
+  frameRate(100);
 
   print("Comida: "+String(countFood));
 }
@@ -54,9 +55,81 @@ function draw() {
         grid[i][j].frontier = false;
       }
     }
-    
-    path = agent.search(selector.dropdown.value(), grafo, grid);
+
+    reloadSearch(agent);
+    searchOn = true;
   });
+  
+  // BFS
+  if (selector.dropdown.value() === 'BFS' && searchOn === true) { 
+    if (agent.frontier.length === 0 && Object.keys(agent.cameFrom).length == 0) { 
+      agent.frontier.push(agent.cell);
+      agent.cameFrom[agent.cell] = null;
+    }
+    
+    path = agent.search('BFS', grafo, grid);
+    if (path !== undefined) {
+      reloadSearch(agent);
+    }
+  } 
+  
+  // DFS
+  if (selector.dropdown.value() === 'DFS' && searchOn === true) {
+    
+    if (agent.frontier.length === 0 && Object.keys(agent.cameFrom).length == 0) { 
+      agent.frontier.push(agent.cell);
+      agent.cameFrom[agent.cell] = null;
+    }
+
+    path = agent.search('DFS', grafo, grid);
+    if (path !== undefined) {
+      reloadSearch(agent);
+    }
+  }
+
+  // Custo Uniforme
+  if (selector.dropdown.value() === 'Custo Uniforme' && searchOn === true) {
+    
+    if (agent.priority.empty() && Object.keys(agent.cameFrom).length == 0) { 
+      agent.priority.put(agent.cell, 0);
+      agent.cameFrom[agent.cell] = null;
+      agent.costNow[agent.cell] = 0;
+    }
+
+    path = agent.search('Custo Uniforme', grafo, grid);
+    if (path !== undefined) {
+      reloadSearch(agent);
+    }
+  }
+
+  // Gulosa
+  if (selector.dropdown.value() === 'Gulosa' && searchOn === true) {
+    
+    if (agent.priority.empty() && Object.keys(agent.cameFrom).length == 0) { 
+      agent.priority.put(agent.cell, 0);
+      agent.cameFrom[agent.cell] = null;
+    }
+
+    path = agent.search('Gulosa', grafo, grid);
+    if (path !== undefined) {
+      reloadSearch(agent);
+    }
+  }
+
+  // A*
+  if (selector.dropdown.value() === 'A*' && searchOn === true) {
+    
+    if (agent.priority.empty() && Object.keys(agent.cameFrom).length == 0) { 
+      agent.priority.put(agent.cell, 0);
+      agent.cameFrom[agent.cell] = null;
+      agent.costNow[agent.cell] = 0;
+    }
+
+    path = agent.search('A*', grafo, grid);
+    if (path !== undefined) {
+      reloadSearch(agent);
+    }
+  }
   
   // Passo 7: O agente recebe e desenha o caminho 
   if (path !== undefined){
@@ -234,6 +307,7 @@ function reloadSketch(){
   }
   
   pathIndex = 0;
+  path = undefined;
   moveOn = false;
 
   // Passo 4: Comida aparece em uma posição aleatória
@@ -243,6 +317,15 @@ function reloadSketch(){
   agent.setGoal(food);
   
   // Definição do frame rate
-  frameRate(5);
+  frameRate(100);
 
+}
+
+function reloadSearch() {
+  agent.frontier = [];
+  agent.cameFrom = {};
+  agent.costNow = {};
+  agent.priority = new PriorityQueue();
+
+  searchOn = false;
 }
