@@ -11,6 +11,7 @@ let noiseOffsetY = 0;
 let countFood = 0;
 let velFactor = 1;
 let moveOn = false;
+let searchOn = false;
 
 function setup() {
   createCanvas(400, 400);
@@ -36,7 +37,7 @@ function setup() {
   agent.setGoal(food);
   
   // Definição do frame rate
-  frameRate(5);
+  frameRate(100);
 
   print("Comida: "+String(countFood));
 }
@@ -54,9 +55,19 @@ function draw() {
         grid[i][j].frontier = false;
       }
     }
-    
-    path = agent.search(selector.dropdown.value(), grafo, grid);
+
+    searchOn = true;
   });
+
+  if (selector.dropdown.value() === 'BFS' && searchOn === true) { 
+    agent.frontier.push(agent.cell);
+    agent.cameFrom[agent.cell] = null;
+
+    path = agent.search('BFS', grafo, grid);
+    if (path !== undefined) {
+      reloadSearch(agent);
+    }
+  }
   
   // Passo 7: O agente recebe e desenha o caminho 
   if (path !== undefined){
@@ -234,6 +245,7 @@ function reloadSketch(){
   }
   
   pathIndex = 0;
+  path = undefined;
   moveOn = false;
 
   // Passo 4: Comida aparece em uma posição aleatória
@@ -243,6 +255,13 @@ function reloadSketch(){
   agent.setGoal(food);
   
   // Definição do frame rate
-  frameRate(5);
+  frameRate(100);
 
+}
+
+function reloadSearch(agent) {
+  agent.frontier = [];
+  agent.cameFrom = {};
+
+  searchOn = false;
 }

@@ -4,6 +4,8 @@ class Agent {
     this.cell = this.pos.x + this.pos.y * 20
     this.pathIndex = 0;
     this.speed = 0.1;
+    this.frontier = [];
+    this.cameFrom = {};
   }
 
   // Define o objetivo
@@ -55,38 +57,24 @@ class Agent {
     
     // BFS
     if (type == 'BFS') {      
-      let founded = false;
-      let start = this.cell;
-      let frontier = [];
-      frontier.push(start);
       
-      let cameFrom = {};
-      cameFrom[start] = null;
-      
-      while (frontier.length > 0) {
-        let current = frontier.shift();
+      if (this.frontier.length > 0) {
+        let current = this.frontier.shift();
         this.cellPosition(current, grid).frontier = false;
         this.cellPosition(current, grid).reached = true;
         
         if (current === this.goal) {
-          founded = true;
-          break;
+          print('Caminho encontrado!');
+          return this.path(this.cell, this.goal, this.cameFrom);
         }
         
         for (let neighbor of graph[current]){
-          if (!(neighbor[0] in cameFrom)) {
-            frontier.push(neighbor[0]);
+          if (!(neighbor[0] in this.cameFrom)) {
+            this.frontier.push(neighbor[0]);
             this.cellPosition(neighbor[0], grid).frontier = true;
-            cameFrom[neighbor[0]] = current;
+            this.cameFrom[neighbor[0]] = current;
           }
         }
-      }
-      
-      if (founded) {
-        print('Caminho encontrado!');
-        return this.path(start, this.goal, cameFrom);
-      } else {
-        print('Caminho não encontrado');
       }
     }
     
