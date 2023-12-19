@@ -101,6 +101,35 @@ function draw() {
       reloadSearch(agent);
     }
   }
+
+  // Gulosa
+  if (selector.dropdown.value() === 'Gulosa' && searchOn === true) {
+    
+    if (agent.priority.empty() && Object.keys(agent.cameFrom).length == 0) { 
+      agent.priority.put(agent.cell, 0);
+      agent.cameFrom[agent.cell] = null;
+    }
+
+    path = agent.search('Gulosa', grafo, grid);
+    if (path !== undefined) {
+      reloadSearch(agent);
+    }
+  }
+
+  // A*
+  if (selector.dropdown.value() === 'A*' && searchOn === true) {
+    
+    if (agent.priority.empty() && Object.keys(agent.cameFrom).length == 0) { 
+      agent.priority.put(agent.cell, 0);
+      agent.cameFrom[agent.cell] = null;
+      agent.costNow[agent.cell] = 0;
+    }
+
+    path = agent.search('A*', grafo, grid);
+    if (path !== undefined) {
+      reloadSearch(agent);
+    }
+  }
   
   // Passo 7: O agente recebe e desenha o caminho 
   if (path !== undefined){
