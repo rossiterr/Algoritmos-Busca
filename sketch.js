@@ -37,7 +37,7 @@ function setup() {
   agent.setGoal(food);
   
   // Definição do frame rate
-  frameRate(100);
+  frameRate(60);
 
   print("Comida: "+String(countFood));
 }
@@ -317,7 +317,7 @@ function reloadSketch(){
   agent.setGoal(food);
   
   // Definição do frame rate
-  frameRate(100);
+  frameRate(60);
 
 }
 
