@@ -59,9 +59,10 @@ function draw() {
     reloadSearch(agent);
     searchOn = true;
   });
-
+  
+  // BFS
   if (selector.dropdown.value() === 'BFS' && searchOn === true) { 
-    if (agent.frontier.length == 0 && Object.keys(agent.cameFrom).length == 0) { 
+    if (agent.frontier.length === 0 && Object.keys(agent.cameFrom).length == 0) { 
       agent.frontier.push(agent.cell);
       agent.cameFrom[agent.cell] = null;
     }
@@ -72,14 +73,30 @@ function draw() {
     }
   } 
   
+  // DFS
   if (selector.dropdown.value() === 'DFS' && searchOn === true) {
     
-    if (agent.frontier.length == 0 && Object.keys(agent.cameFrom).length == 0) { 
+    if (agent.frontier.length === 0 && Object.keys(agent.cameFrom).length == 0) { 
       agent.frontier.push(agent.cell);
       agent.cameFrom[agent.cell] = null;
     }
 
     path = agent.search('DFS', grafo, grid);
+    if (path !== undefined) {
+      reloadSearch(agent);
+    }
+  }
+
+  // Custo Uniforme
+  if (selector.dropdown.value() === 'Custo Uniforme' && searchOn === true) {
+    
+    if (agent.priority.empty() && Object.keys(agent.cameFrom).length == 0) { 
+      agent.priority.put(agent.cell, 0);
+      agent.cameFrom[agent.cell] = null;
+      agent.costNow[agent.cell] = 0;
+    }
+
+    path = agent.search('Custo Uniforme', grafo, grid);
     if (path !== undefined) {
       reloadSearch(agent);
     }
@@ -278,6 +295,8 @@ function reloadSketch(){
 function reloadSearch() {
   agent.frontier = [];
   agent.cameFrom = {};
+  agent.costNow = {};
+  agent.priority = new PriorityQueue();
 
   searchOn = false;
 }

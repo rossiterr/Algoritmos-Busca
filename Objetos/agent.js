@@ -5,6 +5,8 @@ class Agent {
     this.pathIndex = 0;
     this.speed = 0.1;
     this.frontier = [];
+    this.priority = new PriorityQueue();
+    this.costNow = {};
     this.cameFrom = {};
   }
 
@@ -99,45 +101,37 @@ class Agent {
       }
     }
     
+    // Custo Uniforme
     if (type == 'Custo Uniforme') {
-      let frontier = new PriorityQueue();
-      frontier.put(this.cell, 0);
-    
-      let noOrigem = {};
-      let custoAteAgora = {};
-      noOrigem[this.cell] = null;
-      custoAteAgora[this.cell] = 0;
-    
-      while (!frontier.empty()) {
-        let current = frontier.get();
+      if (!this.priority.empty()) {
+        let current = this.priority.get();
         this.cellPosition(current, grid).frontier = false;
         this.cellPosition(current, grid).reached = true;
     
         for (let neighbor of graph[current]) {
-          let newCost = custoAteAgora[current] + neighbor[1];
-          if (!(neighbor[0] in custoAteAgora) || newCost < custoAteAgora[neighbor[0]]) {
-            custoAteAgora[neighbor[0]] = newCost;
+          let newCost = this.costNow[current] + neighbor[1];
+          if (!(neighbor[0] in this.costNow) || newCost < this.costNow[neighbor[0]]) {
+            this.costNow[neighbor[0]] = newCost;
             let priority = newCost;
-            frontier.put(neighbor[0], priority);
+            this.priority.put(neighbor[0], priority);
             this.cellPosition(neighbor[0], grid).frontier = true;
-            noOrigem[neighbor[0]] = current;
+            this.cameFrom[neighbor[0]] = current;
           }
         }
     
         if (current == this.goal) {
           print('Caminho encontrado!');
-          return this.path(this.cell, this.goal, noOrigem);
+          return this.path(this.cell, this.goal, this.cameFrom);
         }
-    }
-    print('Caminho não encontrado');
+      }
     }
     
     if (type == 'Gulosa') {
       let frontier = new PriorityQueue();
       frontier.put(this.cell, 0);
 
-      let noOrigem = {};
-      noOrigem[this.cell] = null;
+      this.cameFrom = {};
+      this.cameFrom[this.cell] = null;
 
       while (!frontier.empty()) {
         let current = frontier.get();
@@ -146,15 +140,15 @@ class Agent {
 
         if (current == this.goal) {
           print('Caminho encontrado!');
-          return this.path(this.cell, this.goal, noOrigem);
+          return this.path(this.cell, this.goal, this.cameFrom);
         }
 
         for (let neighbor of graph[current]) {
-          if (!(neighbor[0] in noOrigem)) {
+          if (!(neighbor[0] in this.cameFrom)) {
             let priority = this.heuristic(this.cellCords(this.goal), this.cellCords(neighbor[0]));
             frontier.put(neighbor[0], priority);
             this.cellPosition(neighbor[0], grid).frontier = true;
-            noOrigem[neighbor[0]] = current;
+            this.cameFrom[neighbor[0]] = current;
           }
         }
       }
@@ -165,10 +159,10 @@ class Agent {
       let frontier = new PriorityQueue();
       frontier.put(this.cell, 0);
 
-      let noOrigem = {};
-      let custoAteAgora = {};
-      noOrigem[this.cell] = null;
-      custoAteAgora[this.cell] = 0;
+      this.cameFrom = {};
+      this.costNow = {};
+      this.cameFrom[this.cell] = null;
+      this.costNow[this.cell] = 0;
 
       while (!frontier.empty()) {
         let current = frontier.get();
@@ -177,17 +171,17 @@ class Agent {
 
         if (current == this.goal) {
           print('Caminho encontrado!');
-          return this.path(this.cell, this.goal, noOrigem);
+          return this.path(this.cell, this.goal, this.cameFrom);
         }
 
         for (let neighbor of graph[current]) {
-          let newCost = custoAteAgora[current] + neighbor[1];
-          if (!(neighbor[0] in custoAteAgora) || newCost < custoAteAgora[neighbor[0]]) {
-            custoAteAgora[neighbor[0]] = newCost;
+          let newCost = this.costNow[current] + neighbor[1];
+          if (!(neighbor[0] in this.costNow) || newCost < this.costNow[neighbor[0]]) {
+            this.costNow[neighbor[0]] = newCost;
             let priority = newCost + this.heuristic(this.cellCords(this.goal), this.cellCords(neighbor[0]));
             frontier.put(neighbor[0], priority);
             this.cellPosition(neighbor[0], grid).frontier = true;
-            noOrigem[neighbor[0]] = current;
+            this.cameFrom[neighbor[0]] = current;
           }
         }
       }
