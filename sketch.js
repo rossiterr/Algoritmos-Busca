@@ -56,14 +56,30 @@ function draw() {
       }
     }
 
+    reloadSearch(agent);
     searchOn = true;
   });
 
   if (selector.dropdown.value() === 'BFS' && searchOn === true) { 
-    agent.frontier.push(agent.cell);
-    agent.cameFrom[agent.cell] = null;
-
+    if (agent.frontier.length == 0 && Object.keys(agent.cameFrom).length == 0) { 
+      agent.frontier.push(agent.cell);
+      agent.cameFrom[agent.cell] = null;
+    }
+    
     path = agent.search('BFS', grafo, grid);
+    if (path !== undefined) {
+      reloadSearch(agent);
+    }
+  } 
+  
+  if (selector.dropdown.value() === 'DFS' && searchOn === true) {
+    
+    if (agent.frontier.length == 0 && Object.keys(agent.cameFrom).length == 0) { 
+      agent.frontier.push(agent.cell);
+      agent.cameFrom[agent.cell] = null;
+    }
+
+    path = agent.search('DFS', grafo, grid);
     if (path !== undefined) {
       reloadSearch(agent);
     }
@@ -259,7 +275,7 @@ function reloadSketch(){
 
 }
 
-function reloadSearch(agent) {
+function reloadSearch() {
   agent.frontier = [];
   agent.cameFrom = {};
 

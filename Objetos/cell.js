@@ -31,7 +31,7 @@ class Cell {
     }
     
     if(this.frontier === true) {
-      stroke (0, 0, 255);
+      stroke (255, 0, 0);
       strokeWeight(3);
     }
     
